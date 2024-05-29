@@ -1,3 +1,4 @@
+https://github.com/yulab2021/TandemMod/tree/master
 #安装
 sudo apt-get install zlib1g-dev #sudo yum install zlib-devel
 mamba install pandas==1.3.5 patsy==0.5.3 packaging==23.1  progressbar33==2.4 python-dateutil==2.8.2  pytz==2023.3 statsmodels==0.10.0 tqdm==4.65.0 typing-extensions==4.6.3

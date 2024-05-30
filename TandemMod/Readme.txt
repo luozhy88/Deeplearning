@@ -22,3 +22,44 @@ https://hackmd.io/@GqOnlbqgSdKAMwgCUU_ljQ/r1YNeXnkO
 guppy_basecaller -i demo/IVET/IVET_m6A -s demo/IVET/IVET_m6A_guppy --num_callers 40 --recursive --post_out --config rna_r9.4.1_70bps_hac.cfg
 multi_to_single_fast5 -i demo/IVET/IVET_m6A_guppy -s demo/IVET/IVET_m6A_guppy_single --recursive #--cpu_threads_per_caller
 
+###########################################
+docker run -v $(pwd):/home/test chrishah/guppy:6.4.2-1   guppy_basecaller  -i /home/test/demo/IVET/IVET_m6A -s /home/test/demo/IVET/IVET_m6A_guppy --num_callers 40 --recursive --post_out --config rna_r9.4.1_70bps_hac.cfg
+
+multi_to_single_fast5 -i demo/IVET/IVET_m6A_guppy -s demo/IVET/IVET_m6A_guppy_single --recursive #--cpu_threads_per_caller
+
+docker run   -v $(pwd):/home/test edwardslab/tombo:latest  /opt/conda/bin/tombo  resquiggle --overwrite --basecall-group Basecall_1D_001 /home/test/demo/IVET/IVET_m6A_guppy_single  /home/test/demo/IVET_reference.fa --processes 40 --fit-global-scale --include-event-stdev
+
+cat demo/IVET/IVET_m6A_guppy/pass/*.fastq >demo/IVET/IVET_m6A.fastq
+
+#minimap2 -ax map-ont demo/IVET_reference.fa demo/IVET/IVET_m6A.fastq >demo/IVET/IVET_m6A.sam
+
+
+docker run   -v $(pwd):/home/test edwardslab/tombo:latest  /opt/conda/bin/minimap2.py   -x map-ont  /home/test/demo/IVET_reference.fa  /home/test/demo/IVET/IVET_m6A.fastq -c /home/test/demo/IVET/IVET_m6A.sam
+
+python scripts/extract_signal_from_fast5.py -p 40 --fast5 demo/IVET/IVET_m6A_guppy_single --reference demo/IVET_reference.fa --sam demo/IVET/IVET_m6A.sam --output demo/IVET/m6A.signal.tsv --clip 10
+python scripts/extract_feature_from_signal.py  --signal_file demo/IVET/m6A.signal.tsv --clip 10 --output demo/IVET/m6A.feature.tsv --motif DRACH
+
+????这里还没有测试完毕
+python scripts/TandemMod.py --run_mode train \
+     --new_model demo/model/m6A.demo.IVET.pkl \
+     --train_data_mod demo/IVET/m6A.train.feature.tsv \
+     --train_data_unmod demo/IVET/unmod.train.feature.tsv \
+     --test_data_mod demo/IVET/m6A.test.feature.tsv \
+     --test_data_unmod demo/IVET/unmod.test.feature.tsv \
+     --epoch 100
+
+python scripts/TandemMod.py --run_mode predict \
+    --pretrained_model demo/model/m6A.demo.IVET.pkl \
+    --feature_file demo/HEK293T/HEK293T.feature.tsv \
+    --predict_result demo/HEK293T/HEK293T.prediction.tsv
+
+python scripts/TandemMod.py --run_mode transfer \
+    --pretrained_model demo/model/m6A.demo.IVET.pkl \
+    --new_model demo/model/m7G.demo.ELIGOS.transfered_from_IVET_m6A.pkl \
+    --train_data_mod demo/ELIGOS/m7G.train.feature.tsv \
+    --train_data_unmod demo/ELIGOS/unmod.train.feature.tsv \
+    --test_data_mod demo/ELIGOS/m7G.test.feature.tsv \
+    --test_data_unmod demo/ELIGOS/unmod.test.feature.tsv \
+     --epoch 100
+
+

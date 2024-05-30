@@ -4,10 +4,11 @@ conda create -n TandemMod2
 conda activate TandemMod2
 
 sudo apt-get install zlib1g-dev #sudo yum install zlib-devel
-mamba install pandas==1.3.5 patsy==0.5.3 packaging==23.1  progressbar33==2.4 python-dateutil==2.8.2  pytz==2023.3 statsmodels==0.10.0 tqdm==4.65.0 typing-extensions==4.6.3
+pip install mappy==2.26 ont-fast5-api==4.1.1 torch==2.0.0 --index-url https://pypi.tuna.tsinghua.edu.cn/simple #指定镜像源安装 torch==1.9.1
+pip install pandas==1.3.5 patsy==0.5.3 packaging==23.1  progressbar33==2.4 python-dateutil==2.8.2  pytz==2023.3  tqdm==4.65.0 typing-extensions==4.6.3 --index-url https://pypi.tuna.tsinghua.edu.cn/simple 
 pip install future==0.18.3 --index-url https://pypi.tuna.tsinghua.edu.cn/simple 
-#pip install mappy==2.26 ont-fast5-api==4.1.1 torch==1.9.1 --index-url https://pypi.tuna.tsinghua.edu.cn/simple #指定镜像源安装
-pip install mappy==2.26 ont-fast5-api==4.1.1 torch==2.0.0 --index-url https://pypi.tuna.tsinghua.edu.cn/simple #指定镜像源安装
+mamba install  statsmodels==0.10.0 
+
 conda install -c bioconda ont-tombo==1.5.1
 
 

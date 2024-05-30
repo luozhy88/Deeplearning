@@ -8,7 +8,7 @@ conda install -c bioconda ont-tombo==1.5.1
 
 ## 已经安装完成的 six==1.16.0 patsy==0.5.3 packaging==23.1
 
-#ont-guppy-cpu安装，建议用docker
+#ont-guppy-cpu安装，建议用docker 6.1.5
 https://hub.docker.com/r/chrishah/guppy/tags
 
 https://mirror.oxfordnanoportal.com/software/analysis/ont-guppy-cpu_3.3.0_linux64.tar.gz
